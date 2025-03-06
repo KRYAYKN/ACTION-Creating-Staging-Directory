@@ -1,0 +1,22 @@
+name: Create Staging Directory
+description: Ensure or create the staging directory.
+
+inputs:
+  Build_StagingDirectory:
+    description: Path to the build staging directory.
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Ensure Staging Directory Exists
+      shell: pwsh
+      env:
+        Build_StagingDirectory: ${{ inputs.Build_StagingDirectory }}
+      run: |
+        if (-Not (Test-Path -Path "$env:Build_StagingDirectory")) {
+          Write-Host "Staging directory does not exist. Creating: $env:Build_StagingDirectory"
+          New-Item -ItemType Directory -Path "$env:Build_StagingDirectory" | Out-Null
+        } else {
+          Write-Host "Staging directory exists: $env:Build_StagingDirectory"
+        }
